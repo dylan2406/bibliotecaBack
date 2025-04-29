@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  *
@@ -35,7 +38,7 @@ public class AutorServiceImpl implements AutorService {
         if (listaAutores.isEmpty()) {
             throw new BadRequestException("No existen autores con esa nacionalidad.");
         }
-        
+
         return listaAutores;
     }
 
@@ -46,6 +49,52 @@ public class AutorServiceImpl implements AutorService {
             throw new BadRequestException("No se encuentra el autor con el id " + autorId);
         }
         return optAutor.get();
+    }
+
+    @Override
+    public Autor crearAutor(Autor autor) throws BadRequestException {
+        if (autor.getNombre() == null || autor.getNombre().trim().isEmpty()) {
+            throw new BadRequestException("El nombre del autor es obligatorio.");
+        }
+
+        Optional<Autor> existente = autorRepository.findByNombre(autor.getNombre().trim());
+        if (existente.isPresent()) {
+            throw new BadRequestException("Ya existe un autor con ese nombre.");
+        }
+
+        return autorRepository.save(autor);
+    }
+
+    @Override
+    public Autor actualizarAutor(Integer autorId, Autor autor) throws BadRequestException {
+        Optional<Autor> autorExistente = autorRepository.findById(autorId);
+        if (!autorExistente.isPresent()) {
+            throw new BadRequestException("No se encontró el autor con ID " + autorId);
+        }
+
+        String nuevoNombre = autor.getNombre().trim();
+        Optional<Autor> otroAutorConMismoNombre = autorRepository.findByNombre(nuevoNombre);
+        if (otroAutorConMismoNombre.isPresent()
+                && !otroAutorConMismoNombre.get().getAutorId().equals(autorId)) {
+            throw new BadRequestException("Ya existe otro autor con el nombre " + nuevoNombre);
+        }
+
+        Autor autorActualizado = autorExistente.get();
+        autorActualizado.setNombre(nuevoNombre);
+        autorActualizado.setNacionalidad(autor.getNacionalidad());
+        autorActualizado.setFechaNacimiento(autor.getFechaNacimiento());
+
+        return autorRepository.save(autorActualizado);
+    }
+
+    @Override
+    public void eliminarAutor(Integer autorId) throws BadRequestException {
+        Optional<Autor> autor = autorRepository.findById(autorId);
+        if (!autor.isPresent()) {
+            throw new BadRequestException("No se encontró el autor con ID " + autorId);
+        }
+
+        autorRepository.deleteById(autorId);
     }
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,6 +49,7 @@ public interface AutorApi {
     /**
      * Metodo para listar los autores registrados en bd.
      *
+     * @param autorIds
      * @return Lista de autores.
      * @throws BadRequestException excepcion.
      */
@@ -57,5 +59,23 @@ public interface AutorApi {
             method = RequestMethod.GET)
     ResponseEntity<Autor> listarAutorPorId(@RequestParam Integer autorIds)
             throws BadRequestException;
+    
+   @RequestMapping(value = "/crear",
+        method = RequestMethod.POST,
+        consumes = {"application/json"},
+        produces = {"application/json"})
+ResponseEntity<Autor> crearAutor(@RequestBody Autor autor) throws BadRequestException;
 
+@RequestMapping(value = "/actualizar",
+        method = RequestMethod.PUT,
+       // consumes = {"application/json"},json
+        produces = {"application/json"})
+ResponseEntity<Autor> actualizarAutor(
+        @RequestParam Integer autorId,
+        @RequestBody Autor autor) throws BadRequestException;
+
+@RequestMapping(value = "/eliminar",
+        method = RequestMethod.DELETE,
+        produces = {"application/json"})
+ResponseEntity<String> eliminarAutor(@RequestParam Integer autorId) throws BadRequestException;
 }

@@ -14,4 +14,8 @@ public interface AutorService {
     List<Autor> obtenerListadoAutoresPorNacionalidad(String nacionalidad) throws BadRequestException;
     
     Autor obtenerAutorPorId(Integer autorId) throws BadRequestException;
+    
+    Autor crearAutor(Autor autor) throws BadRequestException;
+    Autor actualizarAutor(Integer autorId, Autor autor) throws BadRequestException;
+    void eliminarAutor(Integer autorId) throws BadRequestException;
 }

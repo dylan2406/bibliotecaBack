@@ -7,6 +7,8 @@ import java.util.List;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -38,6 +40,20 @@ public class AutorApiController implements AutorApi {
        return ResponseEntity.ok(this.autorService.obtenerAutorPorId(autorId));
     }
 
-    
+@Override
+public ResponseEntity<Autor> crearAutor(@RequestBody Autor autor) throws BadRequestException {
+    return ResponseEntity.ok(this.autorService.crearAutor(autor));
+}
+
+@Override
+public ResponseEntity<Autor> actualizarAutor(Integer autorId, @RequestBody Autor autor) throws BadRequestException {
+    return ResponseEntity.ok(this.autorService.actualizarAutor(autorId, autor));
+}
+
+@Override
+public ResponseEntity<String> eliminarAutor(Integer autorId) throws BadRequestException {
+    this.autorService.eliminarAutor(autorId);
+    return ResponseEntity.ok("Autor eliminado correctamente.");
+}
 }
 
