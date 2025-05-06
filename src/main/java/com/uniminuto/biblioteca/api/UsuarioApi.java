@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author nevar
  */
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/usuario")
 public interface UsuarioApi {
 
@@ -33,5 +34,12 @@ public interface UsuarioApi {
 //            consumes = {"application/json"},
             method = RequestMethod.GET)
     ResponseEntity<Usuario> buscarUsuarioByEmail(@RequestParam String emailUsuario)
+            throws BadRequestException;
+    
+      @RequestMapping(value = "/actualizar-usuario",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<Usuario> actualizarUsuario(@RequestBody Usuario usuario)
             throws BadRequestException;
 }

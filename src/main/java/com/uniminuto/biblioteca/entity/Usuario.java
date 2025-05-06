@@ -4,6 +4,7 @@
  */
 package com.uniminuto.biblioteca.entity;
 
+import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,4 +29,14 @@ public class Usuario {
     
     @Column(name = "email_usuario")
     private String emailUsuario;
+    
+       @Column(name = "telefono_usuario")
+    private String telefono;
+
+    @Column(name = "fecha_registro")
+    private LocalDate fechaRegistro;
+    
+      @Column(name = "estado") 
+    private Boolean estado;
+    
     }

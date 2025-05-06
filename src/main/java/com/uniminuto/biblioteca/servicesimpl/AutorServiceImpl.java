@@ -66,28 +66,6 @@ public class AutorServiceImpl implements AutorService {
     }
 
     @Override
-    public Autor actualizarAutor(Integer autorId, Autor autor) throws BadRequestException {
-        Optional<Autor> autorExistente = autorRepository.findById(autorId);
-        if (!autorExistente.isPresent()) {
-            throw new BadRequestException("No se encontró el autor con ID " + autorId);
-        }
-
-        String nuevoNombre = autor.getNombre().trim();
-        Optional<Autor> otroAutorConMismoNombre = autorRepository.findByNombre(nuevoNombre);
-        if (otroAutorConMismoNombre.isPresent()
-                && !otroAutorConMismoNombre.get().getAutorId().equals(autorId)) {
-            throw new BadRequestException("Ya existe otro autor con el nombre " + nuevoNombre);
-        }
-
-        Autor autorActualizado = autorExistente.get();
-        autorActualizado.setNombre(nuevoNombre);
-        autorActualizado.setNacionalidad(autor.getNacionalidad());
-        autorActualizado.setFechaNacimiento(autor.getFechaNacimiento());
-
-        return autorRepository.save(autorActualizado);
-    }
-
-    @Override
     public void eliminarAutor(Integer autorId) throws BadRequestException {
         Optional<Autor> autor = autorRepository.findById(autorId);
         if (!autor.isPresent()) {
@@ -95,6 +73,36 @@ public class AutorServiceImpl implements AutorService {
         }
 
         autorRepository.deleteById(autorId);
+    }
+
+    @Override
+   public Autor actualizarAutor(Autor autor) throws BadRequestException {
+    // 1. Validar que el autor y su ID no sean nulos
+    if (autor == null || autor.getAutorId() == null) {
+        throw new BadRequestException("El ID del autor es requerido");
+    }
+
+    // 2. Buscar el autor existente
+    Autor autorExistente = autorRepository.findById(autor.getAutorId())
+        .orElseThrow(() -> new BadRequestException("Autor no encontrado con ID: " + autor.getAutorId()));
+
+    // 3. Validar nombre único solo si cambió
+    if (!autorExistente.getNombre().equalsIgnoreCase(autor.getNombre().trim())) {
+        Optional<Autor> autorConMismoNombre = autorRepository.findByNombre(autor.getNombre().trim());
+        
+        if (autorConMismoNombre.isPresent() && 
+            !autorConMismoNombre.get().getAutorId().equals(autor.getAutorId())) {
+            throw new BadRequestException("Ya existe un autor con el nombre: " + autor.getNombre());
+        }
+    }
+
+    // 4. Actualizar campos
+    autorExistente.setNombre(autor.getNombre().trim());
+    autorExistente.setNacionalidad(autor.getNacionalidad());
+    autorExistente.setFechaNacimiento(autor.getFechaNacimiento());
+
+    // 5. Guardar cambios
+    return autorRepository.save(autorExistente);
     }
 
 }

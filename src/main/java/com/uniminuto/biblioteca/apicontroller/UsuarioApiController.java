@@ -7,6 +7,7 @@ package com.uniminuto.biblioteca.apicontroller;
 import com.uniminuto.biblioteca.api.UsuarioApi;
 import com.uniminuto.biblioteca.entity.Usuario;
 import com.uniminuto.biblioteca.services.UsuarioService;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,6 +15,9 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -54,4 +58,24 @@ public class UsuarioApiController implements UsuarioApi {
         Matcher matcher = pattern.matcher(emailUsuario);
         return matcher.matches();
     }
-}
+    
+     @PostMapping("/guardar-usuario")
+    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
+        usuario.setFechaRegistro(LocalDate.now());
+        if (usuario.getEstado() == null) {
+            usuario.setEstado(true);  // Si no se proporciona estado, lo dejamos como 'activo'
+        }
+        Usuario creado = usuarioService.guardarUsuario(usuario);
+        return ResponseEntity.ok(creado);
+    }
+
+    @PostMapping("/actualizar-usuario")
+    @Override
+    public ResponseEntity<Usuario> actualizarUsuario(@RequestBody Usuario usuario) throws BadRequestException {
+      if (usuario.getEstado() == null) {
+            usuario.setEstado(true);  // Si no se proporciona estado, lo dejamos como 'activo'
+        }
+        Usuario usuarioActualizado = usuarioService.actualizarUsuario(usuario);
+        return ResponseEntity.ok(usuarioActualizado);
+    }
+    }

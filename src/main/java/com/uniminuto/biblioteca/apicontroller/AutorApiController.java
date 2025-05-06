@@ -46,14 +46,21 @@ public ResponseEntity<Autor> crearAutor(@RequestBody Autor autor) throws BadRequ
 }
 
 @Override
-public ResponseEntity<Autor> actualizarAutor(Integer autorId, @RequestBody Autor autor) throws BadRequestException {
-    return ResponseEntity.ok(this.autorService.actualizarAutor(autorId, autor));
-}
-
-@Override
 public ResponseEntity<String> eliminarAutor(Integer autorId) throws BadRequestException {
     this.autorService.eliminarAutor(autorId);
     return ResponseEntity.ok("Autor eliminado correctamente.");
 }
+
+    @Override
+        public ResponseEntity<Autor> actualizarAutor(@RequestBody Autor autor) throws BadRequestException {
+    try {
+        Autor autorActualizado = autorService.actualizarAutor(autor);
+        return ResponseEntity.ok(autorActualizado);
+    } catch (BadRequestException e) {
+        throw e; // Preserva el mensaje de error original
+    } catch (Exception e) {
+        throw new BadRequestException("Error interno al actualizar el autor");
+    }
+    }
 }
 

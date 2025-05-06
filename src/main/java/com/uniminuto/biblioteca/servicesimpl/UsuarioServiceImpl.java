@@ -29,11 +29,29 @@ public class UsuarioServiceImpl implements UsuarioService {
     public Usuario buscarPorEmail(String emailUsuario) {
         return usuarioRepository.findByEmailUsuario(emailUsuario);
     }
+    
+    
 //@Bean
 //private UsuarioService usuario(){
 //    return usuario();
 //}
-    
+
+    @Override
+    public Usuario guardarUsuario(Usuario usuario) {
+        if (usuario.getEstado() == null) {
+            usuario.setEstado(true);  // Establecer estado como 'true' (activo) si no se proporciona
+        }
+        return usuarioRepository.save(usuario);
     }
-  
+    
+
+    @Override
+    public Usuario actualizarUsuario(Usuario usuario) {
+        // Se puede actualizar el estado si se pasa, de lo contrario se mantiene el estado actual
+        if (usuario.getEstado() == null) {
+            usuario.setEstado(true);  // Si no se proporciona estado, lo consideramos activo por defecto
+        }
+        return usuarioRepository.save(usuario);
+    }
+}
     

@@ -16,5 +16,7 @@ import java.util.List;
 public interface UsuarioService {
     List<Usuario> obtenerListadoUsuarios();
     Usuario buscarPorEmail(String emailUsuario);
+    Usuario guardarUsuario(Usuario usuario);
+     Usuario actualizarUsuario(Usuario usuario);
 }
 

@@ -26,7 +26,7 @@ public interface AutorApi {
      */
     @RequestMapping(value = "/listar",
             produces = {"application/json"},
-//            consumes = {"application/json"},
+            //            consumes = {"application/json"},
             method = RequestMethod.GET)
     ResponseEntity<List<Autor>> listarAutores()
             throws BadRequestException;
@@ -40,7 +40,7 @@ public interface AutorApi {
      */
     @RequestMapping(value = "/listar-nacionalidad",
             produces = {"application/json"},
-//            consumes = {"application/json"},
+            //            consumes = {"application/json"},
             method = RequestMethod.GET)
     ResponseEntity<List<Autor>> listarAutoresByNacionalidad(
             @RequestParam String nacionalidad)
@@ -55,27 +55,26 @@ public interface AutorApi {
      */
     @RequestMapping(value = "/listar-autor-id",
             produces = {"application/json"},
-//            consumes = {"application/json"},
+            //            consumes = {"application/json"},
             method = RequestMethod.GET)
     ResponseEntity<Autor> listarAutorPorId(@RequestParam Integer autorIds)
             throws BadRequestException;
-    
-   @RequestMapping(value = "/crear",
-        method = RequestMethod.POST,
-        consumes = {"application/json"},
-        produces = {"application/json"})
-ResponseEntity<Autor> crearAutor(@RequestBody Autor autor) throws BadRequestException;
 
-@RequestMapping(value = "/actualizar",
-        method = RequestMethod.PUT,
-       // consumes = {"application/json"},json
-        produces = {"application/json"})
-ResponseEntity<Autor> actualizarAutor(
-        @RequestParam Integer autorId,
-        @RequestBody Autor autor) throws BadRequestException;
+    @RequestMapping(value = "/crear",
+            method = RequestMethod.POST,
+            consumes = {"application/json"},
+            produces = {"application/json"})
+    ResponseEntity<Autor> crearAutor(@RequestBody Autor autor) throws BadRequestException;
 
-@RequestMapping(value = "/eliminar",
-        method = RequestMethod.DELETE,
-        produces = {"application/json"})
-ResponseEntity<String> eliminarAutor(@RequestParam Integer autorId) throws BadRequestException;
+    @RequestMapping(value = "/actualizar",
+            method = RequestMethod.PUT,
+            consumes = {"application/json"},
+            produces = {"application/json"})
+    ResponseEntity<Autor> actualizarAutor(
+            @RequestBody Autor autor) throws BadRequestException;
+
+    @RequestMapping(value = "/eliminar",
+            method = RequestMethod.DELETE,
+            produces = {"application/json"})
+    ResponseEntity<String> eliminarAutor(@RequestParam Integer autorId) throws BadRequestException;
 }
